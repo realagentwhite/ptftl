@@ -111,7 +111,6 @@ def ptfl():
 
 		for x in os.listdir("/pentest/"):
 			installed_modules += 1
-			print('\t'+ bcolors.RED + x + bcolors.ENDC)
 			modules.append(x)
 		
 		# Check if there is anything installed before we continue
@@ -119,8 +118,6 @@ def ptfl():
 			print("[!] No modules or tools have yet to be installed.")
 			print("[i] Try installing some awesome tools from PTF and come back!")
 			sys.exit()
-
-		print("There are %s modules installed"% str(installed_modules))
 
 		for i in modules:
 			tools = (os.listdir('/pentest/'+i))
