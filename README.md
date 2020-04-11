@@ -1,4 +1,4 @@
-# ptftl
+# PTFTL
 The PenTesters Framework Tool Lister (PTFTL)
 ===
 
