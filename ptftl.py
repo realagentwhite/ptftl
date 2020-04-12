@@ -75,32 +75,64 @@ def banner():
 																			 
 	"""
 
-	banner += bcolors.ENDC + """
-			 The"""
+	banner += bcolors.ENDC + """			 The"""
+
 	banner += bcolors.BOLD + """ PenTesters """
+
 	banner += bcolors.ENDC + """Framework Lister\n\n"""
 
-	banner += """        		   """ + bcolors.backBlue + \
-		"""Version: %s""" % (grab_version) + bcolors.ENDC + "\n"
+	banner += """        		   """ + bcolors.backBlue + 		"""Version: %s""" % (grab_version) + bcolors.ENDC + "\n"
 
-	banner += bcolors.YELLOW + bcolors.BOLD + """		    Codename: """ + \
-		bcolors.BLUE + """List all the Tools""" + "\n"
+	banner += bcolors.YELLOW + bcolors.BOLD + """		    Codename: """ + 		bcolors.BLUE + """List all the Tools""" + "\n"
 
-	banner += """             A project by """ + bcolors.GREEN + bcolors.BOLD + \
-		"""Andrew """ + bcolors.RED + """ (aka _agentwhite_) """+ bcolors.ENDC + "\n"
+	banner += """             A project by """ + bcolors.GREEN + bcolors.BOLD + 		"""Andrew """ + bcolors.RED + """ (aka _agentwhite_) """+ bcolors.ENDC + "\n"
 
-	banner += """		 Written by: """ + bcolors.BOLD + \
-		"""Andrew (_agentwhite_)""" + bcolors.ENDC + "\n"
-	banner += """		        Twitter: """ + bcolors.BOLD + \
-		"""@_agentwhite_""" + bcolors.ENDC + "\n"
-	banner += """\n                    """ + bcolors.BOLD + """     All because of """ + \
-		bcolors.ENDC + bcolors.BOLD + bcolors.YELLOW + funny + bcolors.ENDC
+	banner += """		 Written by: """ + bcolors.BOLD + 		"""Andrew (_agentwhite_)""" + bcolors.ENDC + "\n"
 
-	banner += """\n                    """ + bcolors.BOLD + """     https://thegibson.xyz
-			""" + bcolors.ENDC
-	banner += bcolors.BOLD + """\n---------------------------------------------------------------------------------
-	""" + bcolors.ENDC + "\n"
+	banner += """		        Twitter: """ + bcolors.BOLD + 		"""@_agentwhite_""" + bcolors.ENDC + "\n"
+
+	banner += """\n                    """ + bcolors.BOLD + """     All because of """ + 		bcolors.ENDC + bcolors.BOLD + bcolors.YELLOW + funny + bcolors.ENDC
+
+	banner += """\n                    """ + bcolors.BOLD + """     https://thegibson.xyz			""" + bcolors.ENDC
+
+	banner += bcolors.BOLD + """\n---------------------------------------------------------------------------------	""" + bcolors.ENDC + "\n"
+
 	return banner
+
+def check_if_installed(tool):
+	modules = []
+	tools = []
+	installed_modules = 0
+	installed_tools = 0
+
+	for x in os.listdir("/pentest/"):
+		modules.append(x)
+	
+	for i in modules:
+		tools = (os.listdir('/pentest/'+i))
+		for b in tools:
+			if tool == b:
+				return 0
+			else:
+				return 1
+
+def start(tool):
+	exists = 0
+	for i in os.listdir("/pentest/"):
+		for t in os.listdir("/pentest/"+i):
+			if tool == t or tool in t:
+				exists = 1
+	if exists == 0:
+		print("The tool you are looking for was not found.")
+		print("Make sure that you spelled it correctly or if it has even been installed")
+		again()
+	elif exists == 1:
+		print("Sarting up %s now..."%tool)
+		os.system("sudo "+tool)
+		again()
+	else:
+		print("Oops! Seems to be an error somewhere in the code...")
+		sys.exit()
 
 def ptfl():
 	def list_tools():
@@ -133,25 +165,46 @@ def ptfl():
 	'h' or 'help' \t Displays this help menu
 	'list' or 'list tools' \t Displays all the tools you have installed using The PenTesters Framework
 	'exit' or 'shutdown' or 'terminate' \t Exits the PTFL (PenTesters Framework Lister
+	'use' \t To choose a tool to be used ( command example: 'use <tool name>')
+	'clear' or 'cls' \t Clear the terminal
 		""")
 
-	uput = input ("ptfl> ")
-	if uput == 'help' or uput == 'h':
-		help_menu()
-		again()
-	elif uput == 'list' or uput == 'list tools' or uput == 'show modules' or uput == 'show':
-		print("Listing all the tools you have installed...")
-		list_tools()
-		again()
-	elif uput == 'exit' or uput == 'terminate' or uput == 'shutdown':
-		print("Thanks for using The PenTesters Framework Lister")
-		print("See you next time!!")
-		sys.exit()
-	else:
-		print(bcolors.RED + "That option is not valid. Check the help menu below..."+ bcolors.ENDC)
-		help_menu()
-		again()
-	#list_tools()
+	try:
+		uput = input ("ptfl> ")
+		if uput == 'help' or uput == 'h':
+			help_menu()
+			again()
+		elif uput == 'list' or uput == 'list tools' or uput == 'show modules' or uput == 'show':
+			print("Listing all the tools you have installed...")
+			list_tools()
+			again()
+		elif uput == 'exit' or uput == 'terminate' or uput == 'shutdown':
+			print("Thanks for using The PenTesters Framework Lister")
+			print("See you next time!!")
+			sys.exit()
+		elif uput == 'clear' or uput == 'cls':
+			os.system("clear")
+			again()
+		elif uput.startswith("use"):
+			prompt = uput.split(" ")
+			tool = prompt[1]
+			check_if_installed(tool)
+			if check_if_installed(tool) == 0:
+				print("Ok, "+ bcolors.BOLD + tool + bcolors.ENDC + " is installed")
+				print("Going to use " + bcolors.GREEN + bcolors.BOLD + prompt[1] + bcolors.ENDC + "")
+				start(tool)
+			else:
+				print(bcolors.BOLD + bcolors.RED + tool + bcolors.ENDC + " is NOT installed")
+				again()
+		else:
+			print(bcolors.RED + "That option is not valid. Check the help menu below..."+ bcolors.ENDC)
+			help_menu()
+			again()
+		#list_tools()
+	except KeyboardInterrupt:
+		print("\nCaught the ctrl+c command")
+		print("Exiting now")
+		sys.exit(0)
 
 print(banner())
 ptfl()
